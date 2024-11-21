@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 public enum TokenType
 {
-    Keyword, Identifier, Number, Operator, Bracket, Semicolon, Comma, String, Whitespace, Comment, Unknown
+    PalavraReservada, Identificador, Numero, Operador, Delimitador, Vírgula, CadeiaCaracteres, EspaçoEmBranco, Comentário, Desconhecido
 }
 public class Token
 {
@@ -23,16 +23,15 @@ public class LexerAnalyzer
 {
     private static readonly List<(TokenType, string)> TokenPatterns = new List<(TokenType, string)>
     {
-        (TokenType.Keyword, @"\b(public|class|static|void|int|float|if|else|for|while|return|new)\b"),
-        (TokenType.String, "\"(\\\\.|[^\"])*\""),
-        (TokenType.Comment, @"//.*"),
-        (TokenType.Number, @"\b\d+(\.\d+)?([fFdD]?)\b"),
-        (TokenType.Identifier, @"\b[a-zA-Z_][a-zA-Z_0-9]*\b"),
-        (TokenType.Operator, @"[\+\-\*/\=\&\|\!\<\>]+"),
-        (TokenType.Bracket, @"[(){}[\]]"),
-        (TokenType.Semicolon, @";"),
-        (TokenType.Comma, @","),
-        (TokenType.Whitespace, @"\s+"),
+        (TokenType.PalavraReservada, @"\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|native|new|null|package|private|protected|public|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\b"),
+        (TokenType.CadeiaCaracteres, "\"(\\\\.|[^\"])*\""),
+        (TokenType.Comentário, @"//.*"),
+        (TokenType.Numero, @"\b\d+(\.\d+)?([fFdD]?)\b"),
+        (TokenType.Identificador, @"\b[a-zA-Z_][a-zA-Z_0-9]*\b"),
+        (TokenType.Operador, @"[\+\-\*/\=\&\|\!\<\>]+"),
+        (TokenType.Delimitador, @"[(){}[\].:;]"),
+        (TokenType.Vírgula, @","),
+        (TokenType.EspaçoEmBranco, @"\s+"),
     };
 
     public List<Token> Tokens { get; private set; }
@@ -67,7 +66,7 @@ public class LexerAnalyzer
 
             if (longestMatchToken != null)
             {
-                if (longestMatchToken.Type != TokenType.Whitespace) // Ignora espaços em branco
+                if (longestMatchToken.Type != TokenType.EspaçoEmBranco) // Ignora espaços em branco
                 {
                     Tokens.Add(longestMatchToken);
                 }
@@ -75,14 +74,15 @@ public class LexerAnalyzer
             }
             else
             {
-                Tokens.Add(new Token(TokenType.Unknown, Code[position].ToString()));
+                Tokens.Add(new Token(TokenType.Desconhecido, Code[position].ToString()));
                 position++;
             }
         }
     }
+}
 
-    public class Program
-    {
+public class Program
+{
         public static void Main()
         {
             string filePath = "C:\\Users\\pedro\\Downloads\\lex2.txt"; // Caminho do arquivo C#
@@ -103,5 +103,4 @@ public class LexerAnalyzer
                 Console.WriteLine(token);
             }
         }
-    }
 }
