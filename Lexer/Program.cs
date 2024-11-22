@@ -46,7 +46,9 @@ public class LexerAnalyzer
     public void Tokenize()
     {
         int position = 0;
-
+        foreach (var (type,pattern) in TokenPatterns) {
+            Console.WriteLine($"tipo: {type},regex : {pattern}");
+        }
         while (position < Code.Length)
         {
             Token longestMatchToken = null;
@@ -97,7 +99,6 @@ public class Program
 
             var lexer = new LexerAnalyzer(code);
             lexer.Tokenize();
-
             foreach (var token in lexer.Tokens)
             {
                 Console.WriteLine(token);
